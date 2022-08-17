@@ -4,49 +4,47 @@ import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpFilter;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-/**
- * Servlet Filter implementation class FilterAutenticacao
- */
-@WebFilter("/FilterAutenticacao")
+@WebFilter(urlPatterns = { "/principal/*" })
 public class FilterAutenticacao extends HttpFilter implements Filter {
-       
-    /**
-     * @see HttpFilter#HttpFilter()
-     */
-    public FilterAutenticacao() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
 
-	/**
-	 * @see Filter#destroy()
-	 */
+	private static final long serialVersionUID = 1L;
+
+	public FilterAutenticacao() {
+		super();
+	}
+
 	public void destroy() {
-		// TODO Auto-generated method stub
 	}
 
-	/**
-	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-	 */
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		// TODO Auto-generated method stub
-		// place your code here
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
 
-		// pass the request along the filter chain
-		chain.doFilter(request, response);
+		HttpServletRequest req = (HttpServletRequest) request;
+		HttpSession session = req.getSession();
+		String usuarioLogado = (String) session.getAttribute("usuario");
+		String urlPaaraAuntenticar = req.getServletPath();
+
+		if (usuarioLogado == null && !urlPaaraAuntenticar.equalsIgnoreCase("/principal/ServletLogin")) {
+			RequestDispatcher redireciona = request.getRequestDispatcher("/index.jsp?url=" + urlPaaraAuntenticar);
+			request.setAttribute("msg", "Por favor realize o login!");
+			redireciona.forward(request, response);
+			return;
+		} else {
+
+			chain.doFilter(request, response);
+		}
 	}
 
-	/**
-	 * @see Filter#init(FilterConfig)
-	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		// TODO Auto-generated method stub
 	}
 
 }
