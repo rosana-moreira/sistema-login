@@ -25,6 +25,7 @@ public class ServletLogin extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		doPost(request, response);
 
 	}
 
@@ -66,6 +67,9 @@ public class ServletLogin extends HttpServlet {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			RequestDispatcher redirecionar = request.getRequestDispatcher("error.jsp");
+			request.setAttribute("msg", e.getMessage());
+			redirecionar.forward(request, response);
 		}
 	}
 
