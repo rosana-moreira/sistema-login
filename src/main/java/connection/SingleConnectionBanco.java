@@ -4,31 +4,38 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class SingleConnectionBanco {
-	private String driver = "com.mysql.cj.jdbc.Driver";
+	private static String driver = "com.mysql.cj.jdbc.Driver";
 
-	private String url = "jdbc:mysql://127.0.0.1:3306/dbcursojsp?useTimezone=true&serverTimezone=UTC";
+	private static String url = "jdbc:mysql://127.0.0.1:3306/dbcursojsp?useTimezone=true&serverTimezone=UTC";
 
-	private String user = "root";
+	private static String user = "root";
 
-	private String password = "123456789";
+	private static String password = "123456789";
 	private static Connection con = null;
 
 	public static Connection getConnection() {
 		return con;
 	}
 
+	static {
+		conectar();
+	}
+
 	public SingleConnectionBanco() {/* quando tiver um instancia vai conectar */
 		conectar();
 	}
 
-	private Connection conectar() {
+	private static void conectar() {
 		try {
-			Class.forName(driver);
-			con = DriverManager.getConnection(url, user, password);
-			return con;
+			if (con == null) {
+
+				Class.forName(driver);
+				con = DriverManager.getConnection(url, user, password);
+				con.setAutoCommit(false);
+			}
 		} catch (Exception e) {
 			System.out.println(e);
-			return null;
+
 		}
 	}
 
