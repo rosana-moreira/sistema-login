@@ -11,7 +11,8 @@
 
 
 	<form action="ServletLogin" method="post">
-	<input type="hidden" value="<%= request.getParameter("url")%>" name="url">
+		<input type="hidden" value="<%=request.getParameter("url")%>"
+			name="url">
 
 		<table>
 			<tr>
