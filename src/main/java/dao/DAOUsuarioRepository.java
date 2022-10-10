@@ -27,7 +27,7 @@ public class DAOUsuarioRepository {
 		preparedSql.execute();
 
 		connection.commit();
-		
+
 		return this.consultaUsuario(objeto.getLogin());
 
 	}
@@ -52,6 +52,18 @@ public class DAOUsuarioRepository {
 		}
 
 		return modelLogin;
+
+	}
+
+	public boolean validarLogin(String login) throws Exception {
+		String sql = "select count(1) > 0 as existe from model_login where upper(login) = upper('" + login + "');";
+
+		PreparedStatement statement = connection.prepareStatement(sql);
+
+		ResultSet resutlado = statement.executeQuery();
+
+		resutlado.next();/* Pra ele entrar nos resultados do sql */
+		return resutlado.getBoolean("existe");
 
 	}
 
